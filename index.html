@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>LabelLie · HackFest 2.0</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800&display=swap" rel="stylesheet">
+<style>
+  :root { --violet:#7c3aed; --pink:#db2777; --ink:#1c1917; --muted:#57534e; --bg:#fff8f0; }
+  * { box-sizing: border-box; }
+  body { margin:0; font-family: Poppins, system-ui, sans-serif; background: var(--bg); color: var(--ink); }
+  main { max-width: 720px; margin: 0 auto; padding: 48px 20px 64px; }
+  h1 { font-size: 56px; margin: 0; letter-spacing: -0.02em; }
+  h1 span { color: var(--pink); }
+  .tag { color: var(--muted); font-size: 20px; margin: 8px 0 4px; }
+  .team { color: var(--violet); font-weight: 600; margin: 0 0 32px; }
+  .cards { display: grid; gap: 16px; }
+  a.card { display: block; text-decoration: none; color: inherit; background: #fff; border-radius: 20px; padding: 22px 24px; box-shadow: 0 10px 30px -18px #0005; border: 2px solid transparent; transition: border-color .2s, transform .2s; }
+  a.card:hover { border-color: var(--violet); transform: translateY(-2px); }
+  a.card b { display: block; font-size: 20px; }
+  a.card small { color: var(--muted); font-size: 15px; }
+  .main { background: linear-gradient(135deg, var(--violet), var(--pink)) !important; color: #fff !important; }
+  .main small { color: #fde7f3 !important; }
+  footer { margin-top: 32px; color: var(--muted); font-size: 14px; }
+</style>
+</head>
+<body>
+<main>
+  <h1>Label<span>Lie</span> 🔍</h1>
+  <p class="tag">What is the brand hiding? Scan a food packet and get the truth in seconds.</p>
+  <p class="team">Sayed Afia · Ryaan Shah · Anjala Kumari · HackFest 2.0, Track 2: Best Use of Gemma 4</p>
+  <div class="cards">
+    <a class="card main" href="app/"><b>📱 Open the app</b><small>Works on any phone or laptop. On this website, scans show a sample result; the full AI version runs with Gemma 4 on our laptop (see README).</small></a>
+    <a class="card" href="pitch/labellie-pitch.html"><b>🎬 Watch the pitch</b><small>Animated presentation. Click or use the arrow keys to move between slides.</small></a>
+    <a class="card" href="https://github.com/afiasayed2331/LabelLie-Syntax-syndicate"><b>💻 Source code</b><small>Python + FastAPI backend, Gemma 4 label reader, Claude code decoder, facts list.</small></a>
+  </div>
+  <footer>For awareness, not medical advice.</footer>
+</main>
+</body>
+</html>

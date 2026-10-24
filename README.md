@@ -6,6 +6,14 @@ Built at **HackFest 2.0**, Track 2: Best Use of Gemma 4.
 
 **Team:** Sayed Afia · Ryaan Shah · Anjala Kumari
 
+## Try it now
+
+- **App:** https://afiasayed2331.github.io/LabelLie-Syntax-syndicate/app/ (website demo with a sample result)
+- **Pitch:** https://afiasayed2331.github.io/LabelLie-Syntax-syndicate/pitch/labellie-pitch.html
+- **Everything:** https://afiasayed2331.github.io/LabelLie-Syntax-syndicate/
+
+For real AI scans, run the app with Gemma 4 as described in "Run it" below.
+
 ## Features
 
 - **Front vs Back check:** every front claim ("real fruit", "no preservatives") marked True, Misleading or False, with the reason from the back label
