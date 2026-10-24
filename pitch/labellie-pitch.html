@@ -1,0 +1,613 @@
+<title>LabelLie Pitch</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700;800&family=Manrope:wght@400;500;600;700&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
+<style>
+/* Layout: one 1280x720 stage scaled to fit; dark night with violet light, one glowing idea per slide */
+:root {
+  --night: #07060c;
+  --panel: #12101c;
+  --line: #2a2540;
+  --ink: #f3f1fb;
+  --dim: #9a94b8;
+  --violet: #7b5cff;
+  --glow: #a48bff;
+  --pink: #ff4fa3;
+  --red: #ff4d5e;
+  --amber: #ffb547;
+  --green: #3ddc84;
+  --display: "Sora", "Segoe UI", system-ui, sans-serif;
+  --body: "Manrope", "Segoe UI", system-ui, sans-serif;
+  --mono: "JetBrains Mono", ui-monospace, Menlo, monospace;
+  color-scheme: dark;
+}
+html, body { height: 100%; }
+body {
+  background: var(--night); color: var(--ink); font-family: var(--body);
+  overflow: hidden; margin: 0;
+  padding-left: max(0px, env(safe-area-inset-left, 0px));
+  padding-right: max(0px, env(safe-area-inset-right, 0px));
+}
+#viewport { position: fixed; inset: 0; display: grid; place-items: center; overflow: hidden;
+  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+#stage { position: relative; width: 1280px; height: 720px; flex: none; transform-origin: center; }
+
+/* ambient light */
+.aura { position: absolute; inset: -20%; pointer-events: none; z-index: 0;
+  background: radial-gradient(40% 35% at var(--ax, 30%) var(--ay, 110%), #5b3cff88, transparent 70%),
+              radial-gradient(30% 30% at var(--bx, 80%) var(--by, -10%), #ff4fa333, transparent 70%);
+  filter: blur(20px); transition: --ax 1s; animation: breathe 8s ease-in-out infinite alternate; }
+@keyframes breathe { to { transform: scale(1.08) translateY(-2%); opacity: .85; } }
+.grain { position: absolute; inset: 0; z-index: 1; pointer-events: none; opacity: .025;
+  background-image: repeating-radial-gradient(circle at 17% 32%, #fff 0 1px, transparent 1px 3px); }
+
+.slide { position: absolute; inset: 0; z-index: 2; display: flex; flex-direction: column; justify-content: center; padding: 64px 96px; visibility: hidden; }
+.slide.active { visibility: visible; }
+
+h1, h2, h3 { font-family: var(--display); margin: 0; text-wrap: balance; letter-spacing: -0.02em; }
+h2 { font-size: 56px; font-weight: 700; line-height: 1.08; }
+.eyebrow { font-family: var(--mono); font-size: 14px; letter-spacing: .18em; text-transform: uppercase; color: var(--glow); }
+.dim { color: var(--dim); }
+.v { color: var(--glow); } .p { color: var(--pink); }
+
+/* entrance primitives: run only while the slide is .on */
+.a { opacity: 0; }
+.on .a { animation: var(--anim, rise) .9s cubic-bezier(.2,.8,.2,1) var(--d, 0s) both; }
+@keyframes rise { from { opacity: 0; transform: translateY(30px); filter: blur(12px); } to { opacity: 1; transform: none; filter: none; } }
+@keyframes pop  { 0% { opacity: 0; transform: scale(.4); } 70% { opacity: 1; transform: scale(1.08); } 100% { opacity: 1; transform: none; } }
+@keyframes fade { from { opacity: 0; } to { opacity: 1; } }
+@keyframes slideL { from { opacity: 0; transform: translateX(-60px); filter: blur(8px); } to { opacity: 1; transform: none; filter: none; } }
+@keyframes tilt { from { opacity: 0; transform: rotateX(70deg) translateY(40px); filter: blur(10px); } to { opacity: 1; transform: none; filter: none; } }
+
+/* per-letter title */
+.letters span { display: inline-block; opacity: 0; }
+.on .letters span { animation: drop 1s cubic-bezier(.2,1.2,.3,1) both; animation-delay: calc(var(--i) * .07s + .2s); }
+@keyframes drop { from { opacity: 0; transform: translateY(-80px) rotateX(90deg); filter: blur(14px); } to { opacity: 1; transform: none; filter: none; } }
+
+/* ---------- 1. title ---------- */
+.arc { position: absolute; width: 900px; height: 900px; left: -380px; top: -260px; border-radius: 50%;
+  border: 3px solid transparent; border-right-color: var(--violet); filter: drop-shadow(0 0 30px var(--violet)) blur(1px); opacity: 0; }
+.on .arc { animation: spin 2.4s cubic-bezier(.2,.8,.2,1) .1s both; }
+@keyframes spin { from { opacity: 0; transform: rotate(-120deg); } to { opacity: .9; transform: rotate(0); } }
+.logo { width: 84px; height: 84px; border-radius: 24px; display: grid; place-items: center;
+  background: linear-gradient(145deg, #1d1830, #0d0b16); border: 1px solid #3b3360; box-shadow: 0 0 40px #7b5cff66, inset 0 1px 0 #ffffff22; }
+.logo svg { width: 44px; height: 44px; }
+.big-title { font-size: 150px; font-weight: 800; line-height: 1; margin-top: 18px; perspective: 600px; }
+.typed { font-size: 28px; color: var(--dim); min-height: 1.4em; margin-top: 14px; }
+.typed .caret { display: inline-block; width: 3px; height: 1em; background: var(--glow); vertical-align: -3px; margin-left: 4px; animation: blink 1s steps(1) infinite; }
+@keyframes blink { 50% { opacity: 0; } }
+.team { display: flex; gap: 14px; margin-top: 44px; flex-wrap: wrap; }
+.name { font-family: var(--display); font-weight: 600; font-size: 20px; letter-spacing: .06em; padding: 12px 22px; border-radius: 999px;
+  background: #ffffff0a; border: 1px solid #ffffff1f; box-shadow: inset 0 1px 0 #ffffff14; }
+.track { position: absolute; right: 96px; top: 64px; font-family: var(--mono); font-size: 13px; letter-spacing: .14em; color: var(--dim); text-align: right; line-height: 1.8; }
+
+/* ---------- 2. claims ---------- */
+.claims { margin-top: 40px; display: grid; gap: 22px; padding-left: 30px; border-left: 2px solid var(--line); }
+.claim { display: flex; align-items: center; gap: 18px; font-size: 40px; font-family: var(--display); font-weight: 600; position: relative; }
+.claim::before { content: ""; position: absolute; left: -38px; width: 12px; height: 12px; border-radius: 50%; background: var(--ink); }
+.claim .box { padding: 6px 18px; border-radius: 10px; border: 1.5px solid transparent; min-height: 1.2em; transition: all .4s; }
+.claim.busted .box { background: #ff4d5e22; border-color: var(--red); box-shadow: 0 0 30px #ff4d5e44; }
+.claim .x { color: var(--red); font-size: 40px; opacity: 0; transform: scale(0) rotate(-90deg); transition: all .45s cubic-bezier(.2,1.6,.4,1); }
+.claim.busted .x { opacity: 1; transform: none; }
+
+/* ---------- 3. back label ---------- */
+.label-wrap { display: grid; grid-template-columns: 1fr 1.25fr; gap: 64px; align-items: center; }
+.paper { background: #f6f3ea; color: #2b2830; border-radius: 18px; padding: 30px 34px; font-family: var(--mono); font-size: 17px; line-height: 1.9;
+  box-shadow: 0 30px 80px #0009, 0 0 60px #7b5cff22; transform: rotate(-2deg); position: relative; overflow: hidden; }
+.paper b { font-family: var(--display); font-size: 15px; letter-spacing: .1em; display: block; margin-bottom: 8px; color: #6b6474; }
+.hl { border-radius: 4px; padding: 0 4px; transition: background .5s, color .5s; }
+.on .hl { animation: mark .6s ease var(--d) forwards; }
+@keyframes mark { to { background: #ff4d5e; color: #fff; } }
+.scanline { position: absolute; left: 0; right: 0; height: 3px; background: linear-gradient(90deg, transparent, #22e3ff, transparent); box-shadow: 0 0 20px 6px #22e3ff88; top: -10px; }
+.on .scanline { animation: scan 2.6s ease-in-out .3s 2 alternate; }
+@keyframes scan { from { top: 0%; } to { top: 100%; } }
+.facts { display: grid; gap: 18px; }
+.fact { display: flex; gap: 16px; align-items: baseline; font-size: 22px; }
+.fact .tag { font-family: var(--mono); font-size: 14px; color: var(--red); min-width: 128px; }
+
+/* ---------- 4. reveal ---------- */
+.center { align-items: center; text-align: center; }
+.halo { position: absolute; width: 520px; height: 520px; border-radius: 50%; background: radial-gradient(circle, #7b5cff55, transparent 65%); opacity: 0; }
+.on .halo { animation: fade 1.6s ease .2s both, breathe 5s ease-in-out 1.8s infinite alternate; }
+.logo-xl { width: 150px; height: 150px; border-radius: 40px; }
+.logo-xl svg { width: 78px; height: 78px; }
+.word-swap { font-size: 92px; font-weight: 800; margin-top: 30px; }
+.sub { font-size: 26px; color: var(--dim); margin-top: 18px; }
+
+/* ---------- 5. flow ---------- */
+.flow { position: relative; height: 380px; margin-top: 30px; }
+.flow svg.wires { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
+.wire { fill: none; stroke: var(--violet); stroke-width: 2.5; filter: drop-shadow(0 0 6px var(--violet)); stroke-dasharray: 600; stroke-dashoffset: 600; }
+.on .wire { animation: draw 1.2s ease var(--d) forwards; }
+@keyframes draw { to { stroke-dashoffset: 0; } }
+.pulse { fill: none; stroke: #fff; stroke-width: 4; stroke-linecap: round; stroke-dasharray: 18 600; stroke-dashoffset: 618; opacity: 0; filter: drop-shadow(0 0 8px #fff); }
+.on .pulse { animation: travel 2.2s linear var(--d) infinite; }
+@keyframes travel { 0% { stroke-dashoffset: 618; opacity: 1; } 100% { stroke-dashoffset: 0; opacity: 1; } }
+.node { position: absolute; width: 190px; text-align: center; transform: translate(-50%, -50%); }
+.node .chip { width: 104px; height: 104px; margin: 0 auto; border-radius: 30px; display: grid; place-items: center; font-size: 46px;
+  background: linear-gradient(145deg, #1f1a33, #0e0c17); border: 1px solid #3d3563; box-shadow: 0 0 40px #7b5cff44, inset 0 1px 0 #ffffff1c; }
+.node.main .chip { width: 130px; height: 130px; border-radius: 36px; box-shadow: 0 0 70px #7b5cffaa, inset 0 1px 0 #ffffff2a; border-color: var(--glow); }
+.node h3 { font-size: 22px; margin-top: 16px; }
+.node p { font-size: 15px; color: var(--dim); margin: 6px 0 0; }
+
+/* ---------- 6. isometric tiles ---------- */
+.iso-scene { position: relative; height: 470px; perspective: 1400px; margin-top: -10px; }
+.plane { position: absolute; left: 50%; top: 50%; width: 760px; height: 760px; margin: -380px 0 0 -380px; transform: rotateX(58deg) rotateZ(-45deg); transform-style: preserve-3d;
+  background-image: linear-gradient(#ffffff14 1px, transparent 1px), linear-gradient(90deg, #ffffff14 1px, transparent 1px); background-size: 76px 76px;
+  mask-image: radial-gradient(circle, #000 40%, transparent 72%); -webkit-mask-image: radial-gradient(circle, #000 40%, transparent 72%); }
+.tile { position: absolute; width: 196px; height: 196px; border-radius: 22px; transform-style: preserve-3d; display: flex; align-items: center; justify-content: center; text-align: center; padding: 18px;
+  font-family: var(--display); font-weight: 700; font-size: 21px; color: #fff; opacity: 0; }
+.tile i { font-style: normal; display: block; font-size: 40px; margin-bottom: 8px; }
+.on .tile { animation: lift 1s cubic-bezier(.2,1.3,.3,1) var(--d) both, hover 4s ease-in-out calc(var(--d) + 1s) infinite alternate; }
+@keyframes lift { from { opacity: 0; transform: translateZ(-120px); } to { opacity: 1; transform: translateZ(26px); } }
+@keyframes hover { from { transform: translateZ(26px); } to { transform: translateZ(46px); } }
+.t1 { left: 152px; top: 152px; background: linear-gradient(135deg, #8d6bff, #5434e0); box-shadow: -10px 10px 0 #3a22a8, 0 0 60px #7b5cff88; }
+.t2 { left: 412px; top: 152px; background: linear-gradient(135deg, #ff6fb5, #d9307e); box-shadow: -10px 10px 0 #9a1f58, 0 0 60px #ff4fa388; }
+.t3 { left: 152px; top: 412px; background: linear-gradient(135deg, #ffc56b, #e8901d); box-shadow: -10px 10px 0 #a5620f, 0 0 60px #ffb54788; color: #2a1800; }
+.t4 { left: 412px; top: 412px; background: linear-gradient(135deg, #5ff0a2, #1fb866); box-shadow: -10px 10px 0 #12804a, 0 0 60px #3ddc8488; color: #04230f; }
+.iso-legend { position: absolute; right: 0; top: 30px; width: 300px; display: grid; gap: 20px; }
+.iso-legend div { font-size: 17px; color: var(--dim); line-height: 1.45; }
+.iso-legend strong { display: block; color: var(--ink); font-family: var(--display); font-size: 19px; }
+
+/* ---------- 7. verdict demo ---------- */
+.demo { display: grid; grid-template-columns: 340px 1fr; gap: 70px; align-items: center; }
+.phone { width: 320px; height: 600px; border-radius: 46px; background: #0d0b15; border: 2px solid #3a3358; padding: 18px; box-shadow: 0 0 80px #7b5cff44, 0 40px 80px #000a; position: relative; overflow: hidden; }
+.screen { background: #fff8f0; color: #1c1917; border-radius: 30px; height: 100%; padding: 22px 18px; display: flex; flex-direction: column; align-items: center; gap: 12px; overflow: hidden; }
+.badge { width: 120px; height: 120px; border-radius: 50%; background: #dc2626; color: #fff; display: grid; place-items: center; text-align: center; font-family: var(--display); font-weight: 800; font-size: 19px; line-height: 1.2; }
+.on .badge { animation: pop .8s cubic-bezier(.2,1.6,.4,1) .4s both, shake .45s 1.2s 2, ring 1.8s 2s infinite; }
+@keyframes shake { 25% { transform: translateX(-8px) rotate(-4deg); } 75% { transform: translateX(8px) rotate(4deg); } }
+@keyframes ring { 0% { box-shadow: 0 0 0 0 #dc262688; } 80%,100% { box-shadow: 0 0 0 24px #dc262600; } }
+.pname { font-family: var(--display); font-weight: 700; font-size: 17px; }
+.mini { width: 100%; border-radius: 14px; padding: 10px 12px; font-size: 13px; line-height: 1.35; border-left: 5px solid; }
+.mini.m { background: #fff4dc; border-color: #f59e0b; } .mini.f { background: #fde8e8; border-color: #dc2626; } .mini.t { background: #e6f7ec; border-color: #16a34a; }
+.spoons { font-size: 20px; letter-spacing: 2px; }
+.spoons span { display: inline-block; opacity: 0; }
+.on .spoons span { animation: spoon .5s cubic-bezier(.3,1.5,.5,1) calc(2.2s + var(--i) * .12s) both; }
+@keyframes spoon { from { opacity: 0; transform: translateY(-40px) rotate(-90deg); } to { opacity: 1; transform: none; } }
+.stat { font-family: var(--display); font-size: 170px; font-weight: 800; line-height: .9; background: linear-gradient(180deg, #fff, #ff7a86); -webkit-background-clip: text; background-clip: text; color: transparent; }
+.stat-sub { font-size: 28px; margin-top: 10px; }
+.note { font-size: 15px; color: var(--dim); margin-top: 24px; font-family: var(--mono); }
+
+/* ---------- 8. compare ---------- */
+.versus { display: grid; grid-template-columns: 1fr 1fr; gap: 28px; margin-top: 40px; }
+.col { border-radius: 26px; padding: 30px 34px; background: var(--panel); border: 1px solid var(--line); }
+.col.us { background: linear-gradient(160deg, #241b4d, #130f24); border-color: var(--glow); box-shadow: 0 0 60px #7b5cff44; }
+.col h3 { font-size: 24px; margin-bottom: 20px; }
+.row { display: flex; gap: 14px; align-items: center; font-size: 20px; padding: 11px 0; border-top: 1px solid #ffffff10; }
+.row .ic { width: 30px; height: 30px; border-radius: 50%; display: grid; place-items: center; font-size: 15px; font-weight: 800; flex: none; }
+.col .ic { background: #ffffff10; color: var(--dim); }
+.col.us .ic { background: var(--green); color: #04230f; }
+
+/* ---------- 9. gemma carousel ---------- */
+.reel { position: relative; height: 120px; margin-top: 50px; overflow: hidden; mask-image: linear-gradient(90deg, transparent, #000 20%, #000 80%, transparent); -webkit-mask-image: linear-gradient(90deg, transparent, #000 20%, #000 80%, transparent); }
+.reel-track { position: absolute; left: 50%; top: 0; display: flex; height: 120px; transition: transform .8s cubic-bezier(.7,0,.2,1); }
+.reel-item { width: 380px; flex: none; display: flex; align-items: center; justify-content: center; gap: 16px; font-family: var(--display); font-size: 38px; font-weight: 600; color: #ffffff40; transition: color .6s; border-left: 1px solid #ffffff12; }
+.reel-item.cur { color: #fff; }
+.frame { position: absolute; left: 50%; top: 0; width: 380px; height: 120px; margin-left: -190px; border: 1.5px solid #ffffff55; border-radius: 6px; box-shadow: 0 0 40px #7b5cff55, inset 0 0 40px #7b5cff22; pointer-events: none; }
+.reel-caption { margin-top: 34px; font-size: 24px; color: var(--dim); min-height: 1.5em; text-align: center; }
+
+/* ---------- 10. trust words ---------- */
+.stack3 { display: grid; gap: 26px; margin-top: 44px; }
+.trow { display: grid; grid-template-columns: 300px 1fr; gap: 30px; align-items: baseline; }
+.trow h3 { font-size: 40px; font-weight: 800; }
+.trow p { margin: 0; font-size: 22px; color: var(--dim); line-height: 1.5; }
+.wobble span { display: inline-block; }
+.on .wobble span { animation: wob 1.2s cubic-bezier(.2,1.4,.4,1) calc(var(--d) + var(--i) * .05s) both; }
+@keyframes wob { from { opacity: 0; transform: translateY(40px) rotate(14deg); color: var(--glow); } to { opacity: 1; transform: none; } }
+
+/* ---------- 11. close ---------- */
+.cta { margin-top: 44px; display: inline-flex; padding: 20px 40px; border-radius: 999px; font-family: var(--display); font-weight: 700; font-size: 24px;
+  background: linear-gradient(180deg, #5b3cff, #3b1fd6); border: 1.5px solid #b6a4ff; box-shadow: 0 0 50px #7b5cffbb, inset 0 1px 0 #ffffff55; }
+.on .cta { animation: pop .8s cubic-bezier(.2,1.6,.4,1) 1.4s both, glowp 2.4s ease-in-out 2.2s infinite; }
+@keyframes glowp { 50% { box-shadow: 0 0 90px #7b5cffff, inset 0 1px 0 #ffffff55; } }
+.credits { position: absolute; bottom: 56px; left: 0; right: 0; text-align: center; font-family: var(--mono); font-size: 14px; letter-spacing: .2em; color: var(--dim); }
+
+/* ---------- 9. safe for whom (orbit) ---------- */
+.orbit { position: relative; height: 470px; margin-top: 10px; }
+.orbit svg { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
+.spoke { stroke: var(--violet); stroke-width: 2; stroke-dasharray: 340; stroke-dashoffset: 340; filter: drop-shadow(0 0 5px var(--violet)); }
+.on .spoke { animation: draw .9s ease var(--d) forwards; }
+.packet { position: absolute; left: 544px; top: 255px; margin: -75px 0 0 -75px; width: 150px; height: 150px; border-radius: 38px; display: grid; place-items: center; text-align: center;
+  background: linear-gradient(145deg, #2a2050, #120e22); border: 1.5px solid var(--glow); box-shadow: 0 0 80px #7b5cffaa; font-family: var(--display); font-weight: 700; font-size: 16px; }
+.packet i { font-style: normal; display: block; font-size: 52px; }
+.person { position: absolute; margin: -46px 0 0 -85px; text-align: center; width: 170px; }
+.person .face { width: 92px; height: 92px; margin: 0 auto; border-radius: 50%; display: grid; place-items: center; font-size: 42px;
+  background: #16131f; border: 1.5px solid #ffffff2a; transition: all .4s; }
+.person h3 { font-size: 19px; margin-top: 10px; }
+.person .pill { display: inline-block; margin-top: 6px; font-family: var(--mono); font-size: 12px; letter-spacing: .1em; padding: 4px 12px; border-radius: 999px; opacity: .35; transition: opacity .4s; }
+.person.hot .face { border-color: var(--glow); box-shadow: 0 0 40px #7b5cffcc; transform: scale(1.12); background: #2a1f55; }
+.person.hot .pill { opacity: 1; }
+.pill.avoid { background: #ff4d5e2a; color: var(--red); border: 1px solid var(--red); }
+.pill.limit { background: #ffb5472a; color: var(--amber); border: 1px solid var(--amber); }
+.pill.check { background: #3ddc842a; color: var(--green); border: 1px solid var(--green); }
+
+/* ---------- 10. five answers ---------- */
+.answers { display: grid; gap: 14px; margin-top: 34px; }
+.ans { display: grid; grid-template-columns: 58px 200px 120px 1fr; gap: 20px; align-items: center; padding: 14px 24px; border-radius: 18px; background: var(--panel); border: 1px solid var(--line); }
+.ans .em { font-size: 34px; }
+.ans h3 { font-size: 22px; }
+.ans .pill { justify-self: start; font-family: var(--mono); font-size: 13px; letter-spacing: .1em; padding: 6px 14px; border-radius: 999px; }
+.ans p { margin: 0; font-size: 18px; color: var(--dim); line-height: 1.4; }
+.ans p b { color: var(--ink); font-weight: 600; }
+
+/* ---------- 11. what each profile watches ---------- */
+.watch { display: grid; grid-template-columns: repeat(5, 1fr); gap: 16px; margin-top: 38px; }
+.wcol { border-radius: 22px; padding: 22px 18px; background: var(--panel); border: 1px solid var(--line); min-width: 0; }
+.wcol .em { font-size: 36px; }
+.wcol h3 { font-size: 20px; margin: 10px 0 14px; }
+.tagl { display: flex; flex-wrap: wrap; gap: 8px; }
+.tagl span { font-size: 14px; padding: 6px 11px; border-radius: 999px; background: #ffffff0d; border: 1px solid #ffffff1c; }
+.disclaim { margin-top: 30px; font-family: var(--mono); font-size: 14px; letter-spacing: .08em; color: var(--dim); }
+
+/* ---------- chrome ---------- */
+#progress { position: fixed; left: 0; bottom: 0; height: 3px; background: linear-gradient(90deg, var(--violet), var(--pink)); box-shadow: 0 0 12px var(--violet); transition: width .6s cubic-bezier(.2,.8,.2,1); z-index: 20; margin-bottom: env(safe-area-inset-bottom, 0px); }
+#hud { position: fixed; right: max(18px, env(safe-area-inset-right, 0px)); bottom: calc(14px + env(safe-area-inset-bottom, 0px)); z-index: 20; display: flex; gap: 8px; align-items: center; font-family: var(--mono); font-size: 13px; color: var(--dim); }
+#hud button { background: #ffffff0d; color: var(--ink); border: 1px solid #ffffff22; border-radius: 10px; height: 34px; min-width: 34px; padding: 0 10px; font: inherit; cursor: pointer; }
+#hud button:hover { background: #ffffff1c; }
+#hud button:focus-visible { outline: 2px solid var(--glow); outline-offset: 2px; }
+#hint { position: fixed; left: 50%; bottom: calc(18px + env(safe-area-inset-bottom, 0px)); transform: translateX(-50%); z-index: 20; font-family: var(--mono); font-size: 12px; color: #ffffff55; letter-spacing: .12em; transition: opacity 1s; }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: .01ms !important; animation-delay: 0s !important; animation-iteration-count: 1 !important; transition: none !important; }
+}
+</style>
+
+<div id="viewport">
+  <div id="stage">
+    <div class="aura" id="aura"></div>
+    <div class="grain"></div>
+
+    <!-- 1 TITLE -->
+    <section class="slide" data-aura="22% 105% 85% -10%">
+      <div class="arc"></div>
+      <div class="track a" style="--d:.2s">HACKFEST 2.0<br>TRACK 2 · BEST USE OF GEMMA 4</div>
+      <div class="logo a" style="--anim:pop;--d:.1s">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round"><circle cx="10.5" cy="10.5" r="6.5"/><path d="M15.5 15.5 21 21"/><path d="M8 10.5h5" stroke="#ff4fa3"/></svg>
+      </div>
+      <h1 class="big-title letters" data-letters="LabelLie" data-accent="5"></h1>
+      <div class="typed" data-type="What is the brand hiding?" data-delay="1300"></div>
+      <div class="team">
+        <span class="name a" style="--d:2.4s">SAYED AFIA</span>
+        <span class="name a" style="--d:2.6s">RYAAN SHAH</span>
+        <span class="name a" style="--d:2.8s">ANJALA KUMARI</span>
+      </div>
+    </section>
+
+    <!-- 2 CLAIMS -->
+    <section class="slide" data-aura="10% 100% 90% 0%">
+      <p class="eyebrow a">Let's say you pick up a juice</p>
+      <h2 class="a" style="--d:.2s">The claims you <span class="v">trust</span>:</h2>
+      <div class="claims">
+        <div class="claim" data-claim="Made with real mango" data-at="900"><span class="box"></span><span class="x">✕</span></div>
+        <div class="claim" data-claim="No added preservatives" data-at="2600"><span class="box"></span><span class="x">✕</span></div>
+        <div class="claim" data-claim="Healthy for kids" data-at="4300"><span class="box"></span><span class="x">✕</span></div>
+      </div>
+    </section>
+
+    <!-- 3 BACK LABEL -->
+    <section class="slide" data-aura="80% 110% 10% -10%">
+      <div class="label-wrap">
+        <div class="paper a" style="--anim:tilt;--d:.1s">
+          <div class="scanline"></div>
+          <b>INGREDIENTS</b>
+          Water, <span class="hl" style="--d:1.2s">Sugar</span>, Mango Pulp (10%), <span class="hl" style="--d:1.7s">Maltodextrin</span>,
+          Acidity Regulator (INS 330), Preservative (<span class="hl" style="--d:2.2s">INS 211</span>),
+          Colour (<span class="hl" style="--d:2.7s">INS 110</span>), Vitamin C, Nature Identical Flavouring Substances.
+          <br><br><b>NUTRITION · PER 100 ML</b>
+          Total sugars 13 g · Net qty <span class="hl" style="--d:3.2s">250 ml</span>
+        </div>
+        <div>
+          <p class="eyebrow a" style="--d:.3s">Now flip it over</p>
+          <h2 class="a" style="--d:.5s">The back tells <span class="p">the truth</span></h2>
+          <div class="facts" style="margin-top:34px">
+            <div class="fact a" style="--anim:slideL;--d:1.3s"><span class="tag">SUGAR</span>2nd ingredient, before the mango</div>
+            <div class="fact a" style="--anim:slideL;--d:1.8s"><span class="tag">MALTODEXTRIN</span>Sugar under another name</div>
+            <div class="fact a" style="--anim:slideL;--d:2.3s"><span class="tag">INS 211</span>"No preservatives"? It's right here</div>
+            <div class="fact a" style="--anim:slideL;--d:2.8s"><span class="tag">INS 110</span>Colour that needs a child warning in the EU</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 4 REVEAL -->
+    <section class="slide center" data-aura="50% 105% 50% -10%">
+      <div class="halo"></div>
+      <div class="logo logo-xl a" style="--anim:pop;--d:.3s">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round"><circle cx="10.5" cy="10.5" r="6.5"/><path d="M15.5 15.5 21 21"/><path d="M8 10.5h5" stroke="#ff4fa3"/></svg>
+      </div>
+      <h1 class="word-swap letters" data-letters="LabelLie" data-accent="5"></h1>
+      <p class="sub a" style="--d:1.4s">Two photos. Ten seconds. One honest verdict.</p>
+      <p class="sub a" style="--d:1.9s;font-size:20px">FoodPharmer in your pocket, for every packet.</p>
+    </section>
+
+    <!-- 5 FLOW -->
+    <section class="slide" data-aura="50% 110% 50% -20%">
+      <p class="eyebrow a">How it works</p>
+      <h2 class="a" style="--d:.15s">Phone → Gemma 4 → <span class="v">Verdict</span></h2>
+      <div class="flow">
+        <svg class="wires" viewBox="0 0 1088 380" preserveAspectRatio="none">
+          <path class="wire" style="--d:.6s" d="M235 150 H390 V190 H455"/>
+          <path class="wire" style="--d:1.4s" d="M633 190 H698 V150 H853"/>
+          <path class="wire" style="--d:2.0s" d="M544 255 V320 H690"/>
+          <path class="pulse" style="--d:1.8s" d="M235 150 H390 V190 H455"/>
+          <path class="pulse" style="--d:2.6s" d="M633 190 H698 V150 H853"/>
+        </svg>
+        <div class="node a" style="--anim:pop;--d:.3s;left:140px;top:150px"><div class="chip">📱</div><h3>Scan</h3><p>Front + back photos</p></div>
+        <div class="node main a" style="--anim:pop;--d:1.1s;left:544px;top:190px"><div class="chip">✦</div><h3>Gemma 4</h3><p>Reads both labels, offline</p></div>
+        <div class="node a" style="--anim:pop;--d:1.9s;left:948px;top:150px"><div class="chip">🚨</div><h3>Verdict</h3><p>Honest · Misleading · Exposed</p></div>
+        <div class="node a" style="--anim:pop;--d:2.4s;left:800px;top:320px;width:240px"><p style="font-size:16px;color:var(--ink)">📚 Sourced facts + Python maths</p></div>
+      </div>
+    </section>
+
+    <!-- 6 ISO FEATURES -->
+    <section class="slide" data-aura="40% 110% 90% 10%">
+      <p class="eyebrow a">What it catches</p>
+      <h2 class="a" style="--d:.15s">Four features</h2>
+      <div class="iso-scene">
+        <div class="plane" style="left:36%">
+          <div class="tile t1" style="--d:.5s"><div><i>🎭</i>Front vs Back</div></div>
+          <div class="tile t2" style="--d:.75s"><div><i>🥄</i>Packet sugar</div></div>
+          <div class="tile t3" style="--d:1s"><div><i>🕵️</i>Code decoder</div></div>
+          <div class="tile t4" style="--d:1.25s"><div><i>🔊</i>Hindi voice</div></div>
+        </div>
+        <div class="iso-legend">
+          <div class="a" style="--anim:slideL;--d:1.4s"><strong>Front vs Back</strong>Every claim marked True, Misleading or False</div>
+          <div class="a" style="--anim:slideL;--d:1.6s"><strong>Packet sugar</strong>Whole packet in teaspoons, not per serving</div>
+          <div class="a" style="--anim:slideL;--d:1.8s"><strong>Code decoder</strong>INS numbers and hidden names in plain words</div>
+          <div class="a" style="--anim:slideL;--d:2.0s"><strong>Hindi voice</strong>The verdict read aloud for every age</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 7 DEMO -->
+    <section class="slide" data-aura="20% 100% 80% 0%">
+      <div class="demo">
+        <div class="phone a" style="--anim:tilt;--d:.1s">
+          <div class="screen">
+            <div class="badge"><div>🚨<br>EXPOSED</div></div>
+            <div class="pname">Fruity Splash Mango Drink</div>
+            <div class="mini m a" style="--anim:slideL;--d:1.4s"><b>"Real mango"</b> Misleading: only 10% pulp</div>
+            <div class="mini f a" style="--anim:slideL;--d:1.6s"><b>"No preservatives"</b> False: INS 211 listed</div>
+            <div class="mini t a" style="--anim:slideL;--d:1.8s"><b>"Vitamin C"</b> True: added as stated</div>
+            <div class="spoons" data-spoons="8"></div>
+          </div>
+        </div>
+        <div>
+          <p class="eyebrow a" style="--d:.3s">One bottle, 250 ml</p>
+          <div class="stat a" style="--anim:pop;--d:.6s"><span data-count="8">0</span></div>
+          <p class="stat-sub a" style="--d:1s">teaspoons of sugar in a "real mango" drink</p>
+          <p class="note a" style="--d:1.6s">SAMPLE RESULT · LIVE DEMO WITH REAL PACKETS NEXT</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 8 COMPARE -->
+    <section class="slide" data-aura="85% 105% 15% -10%">
+      <p class="eyebrow a">Why we are different</p>
+      <h2 class="a" style="--d:.15s">Others show what's inside.<br>We show what's <span class="p">hidden</span>.</h2>
+      <div class="versus">
+        <div class="col a" style="--d:.5s">
+          <h3 class="dim">Other scanner apps</h3>
+          <div class="row"><span class="ic">–</span>Back label or barcode only</div>
+          <div class="row"><span class="ic">–</span>Sugar per 100 g</div>
+          <div class="row"><span class="ic">–</span>One generic score</div>
+          <div class="row"><span class="ic">–</span>Mostly English</div>
+          <div class="row"><span class="ic">–</span>Same answer for everyone</div>
+        </div>
+        <div class="col us a" style="--d:.8s">
+          <h3>LabelLie</h3>
+          <div class="row a" style="--anim:slideL;--d:1.1s"><span class="ic">✓</span>Front claims checked against the back</div>
+          <div class="row a" style="--anim:slideL;--d:1.3s"><span class="ic">✓</span>Whole packet, in teaspoons</div>
+          <div class="row a" style="--anim:slideL;--d:1.5s"><span class="ic">✓</span>A reason for every claim</div>
+          <div class="row a" style="--anim:slideL;--d:1.7s"><span class="ic">✓</span>Hindi voice + share card</div>
+          <div class="row a" style="--anim:slideL;--d:1.9s"><span class="ic">✓</span>Safe check for 5 kinds of people</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SAFE FOR WHOM: orbit -->
+    <section class="slide" data-aura="50% 110% 50% -10%">
+      <p class="eyebrow a">New: Safe for whom?</p>
+      <h2 class="a" style="--d:.15s">One packet. <span class="v">Is it safe for you?</span></h2>
+      <div class="orbit">
+        <svg viewBox="0 0 1088 470" preserveAspectRatio="none">
+          <line class="spoke" style="--d:.7s" x1="544" y1="255" x2="544" y2="36"/>
+          <line class="spoke" style="--d:.85s" x1="544" y1="255" x2="870" y2="170"/>
+          <line class="spoke" style="--d:1s" x1="544" y1="255" x2="750" y2="380"/>
+          <line class="spoke" style="--d:1.15s" x1="544" y1="255" x2="338" y2="380"/>
+          <line class="spoke" style="--d:1.3s" x1="544" y1="255" x2="218" y2="170"/>
+        </svg>
+        <div class="packet a" style="--anim:pop;--d:.3s"><div><i>🧃</i>Mango drink</div></div>
+        <div class="person a" style="--anim:pop;--d:.9s;left:544px;top:36px"><div class="face">🤰</div><h3>Pregnant</h3><span class="pill limit">LIMIT</span></div>
+        <div class="person a" style="--anim:pop;--d:1.05s;left:870px;top:170px"><div class="face">🧒</div><h3>Child</h3><span class="pill avoid">AVOID</span></div>
+        <div class="person a" style="--anim:pop;--d:1.2s;left:750px;top:380px"><div class="face">👵</div><h3>Elderly</h3><span class="pill limit">LIMIT</span></div>
+        <div class="person a" style="--anim:pop;--d:1.35s;left:338px;top:380px"><div class="face">🩸</div><h3>Diabetic</h3><span class="pill avoid">AVOID</span></div>
+        <div class="person a" style="--anim:pop;--d:1.5s;left:218px;top:170px"><div class="face">🫁</div><h3>Asthma</h3><span class="pill limit">CHECK</span></div>
+      </div>
+    </section>
+
+    <!-- SAFE FOR WHOM: five answers -->
+    <section class="slide" data-aura="85% 105% 10% -10%">
+      <p class="eyebrow a">Same packet, five different answers</p>
+      <h2 class="a" style="--d:.15s">Other apps give one score. <span class="p">We ask who is eating it.</span></h2>
+      <div class="answers">
+        <div class="ans a" style="--anim:slideL;--d:.5s"><span class="em">🧒</span><h3>Child</h3><span class="pill avoid">AVOID</span><p><b>8 teaspoons of sugar</b> in one bottle, and INS 110 needs a warning for children in the EU</p></div>
+        <div class="ans a" style="--anim:slideL;--d:.7s"><span class="em">🩸</span><h3>Diabetic</h3><span class="pill avoid">AVOID</span><p><b>32 g sugar</b> plus maltodextrin, which raises blood sugar fast</p></div>
+        <div class="ans a" style="--anim:slideL;--d:.9s"><span class="em">🤰</span><h3>Pregnant</h3><span class="pill limit">LIMIT</span><p><b>High added sugar.</b> An occasional drink is fine; not an everyday habit</p></div>
+        <div class="ans a" style="--anim:slideL;--d:1.1s"><span class="em">👵</span><h3>Elderly</h3><span class="pill limit">LIMIT</span><p><b>High sugar, little nutrition.</b> Fresh fruit is a better choice</p></div>
+        <div class="ans a" style="--anim:slideL;--d:1.3s"><span class="em">🫁</span><h3>Asthma</h3><span class="pill limit">CHECK</span><p><b>Sodium benzoate and azo colour</b> can trouble some sensitive people</p></div>
+      </div>
+    </section>
+
+    <!-- SAFE FOR WHOM: rules -->
+    <section class="slide" data-aura="20% 105% 80% -5%">
+      <p class="eyebrow a">How it decides</p>
+      <h2 class="a" style="--d:.15s">Each person has a <span class="v">watch list</span></h2>
+      <div class="watch">
+        <div class="wcol a" style="--anim:tilt;--d:.4s"><span class="em">🤰</span><h3>Pregnant</h3><div class="tagl"><span>Caffeine</span><span>Alcohol</span><span>Raw / unpasteurised</span><span>High sugar</span></div></div>
+        <div class="wcol a" style="--anim:tilt;--d:.55s"><span class="em">🧒</span><h3>Child</h3><div class="tagl"><span>Artificial colours</span><span>Caffeine</span><span>Sweeteners</span><span>High sugar</span></div></div>
+        <div class="wcol a" style="--anim:tilt;--d:.7s"><span class="em">👵</span><h3>Elderly</h3><div class="tagl"><span>High salt</span><span>High sugar</span><span>Trans fat</span><span>Hard to digest</span></div></div>
+        <div class="wcol a" style="--anim:tilt;--d:.85s"><span class="em">🩸</span><h3>Diabetic</h3><div class="tagl"><span>Sugar</span><span>Hidden sugars</span><span>Maida</span><span>Maltodextrin</span></div></div>
+        <div class="wcol a" style="--anim:tilt;--d:1s"><span class="em">🫁</span><h3>Asthma</h3><div class="tagl"><span>Sulphites (INS 220–228)</span><span>Benzoates</span><span>Azo colours</span></div></div>
+      </div>
+      <p class="disclaim a" style="--d:1.4s">RULES BUILT FROM FSSAI, WHO AND EU SOURCES · AWARENESS, NOT MEDICAL ADVICE · ALWAYS ASK YOUR DOCTOR</p>
+    </section>
+
+    <!-- 9 GEMMA -->
+    <section class="slide center" data-aura="50% 110% 50% -10%">
+      <p class="eyebrow a">Track 2 · Best use of Gemma 4</p>
+      <h2 class="a" style="--d:.15s">Why Gemma 4 runs the show</h2>
+      <div class="reel a" style="--anim:fade;--d:.4s;width:100%">
+        <div class="reel-track" id="reel">
+          <div class="reel-item">🖼️ Reads images</div>
+          <div class="reel-item">📴 Works offline</div>
+          <div class="reel-item">🔒 Private</div>
+          <div class="reel-item">💻 Runs on a laptop</div>
+        </div>
+        <div class="frame"></div>
+      </div>
+      <p class="reel-caption" id="reelCap"></p>
+    </section>
+
+    <!-- 10 TRUST -->
+    <section class="slide" data-aura="15% 105% 85% -5%">
+      <p class="eyebrow a">Built on facts, not fear</p>
+      <div class="stack3">
+        <div class="trow"><h3 class="wobble" data-wobble="Sourced" style="--d:.2s"></h3><p class="a" style="--d:.6s">Every additive fact comes from FSSAI, EFSA, WHO or EU rules, and the source is shown in the app.</p></div>
+        <div class="trow"><h3 class="wobble" data-wobble="Careful" style="--d:1s"></h3><p class="a" style="--d:1.4s">We say "restricted in the EU" or "needs a warning label". Never "scam", never "causes cancer".</p></div>
+        <div class="trow"><h3 class="wobble" data-wobble="Calculated" style="--d:1.8s"></h3><p class="a" style="--d:2.2s">Sugar totals come from the printed numbers, calculated in code. Gemma explains; it does not guess.</p></div>
+      </div>
+    </section>
+
+    <!-- 11 CLOSE -->
+    <section class="slide center" data-aura="50% 115% 50% -15%">
+      <div class="halo"></div>
+      <div class="logo a" style="--anim:pop;--d:.2s">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round"><circle cx="10.5" cy="10.5" r="6.5"/><path d="M15.5 15.5 21 21"/><path d="M8 10.5h5" stroke="#ff4fa3"/></svg>
+      </div>
+      <h2 class="a" style="--d:.5s;font-size:72px;margin-top:26px">FoodPharmer <span class="v">in your pocket</span></h2>
+      <p class="sub a" style="--d:.9s">For every packet, in every language.</p>
+      <div class="cta">Hand us any packet. We'll scan it live.</div>
+      <div class="credits a" style="--d:2s">SAYED AFIA · RYAAN SHAH · ANJALA KUMARI</div>
+    </section>
+  </div>
+</div>
+
+<div id="progress"></div>
+<div id="hint">← → OR CLICK TO NAVIGATE</div>
+<div id="hud">
+  <button id="prev" aria-label="Previous slide">←</button>
+  <span id="count">1 / 14</span>
+  <button id="next" aria-label="Next slide">→</button>
+  <button id="fs" aria-label="Full screen">⛶</button>
+</div>
+
+<script>
+(() => {
+  const slides = [...document.querySelectorAll('.slide')];
+  const stage = document.getElementById('stage');
+  let cur = 0, timers = [];
+  const later = (fn, ms) => timers.push(setTimeout(fn, ms));
+
+  // fit the 16:9 stage
+  function fit() {
+    const vp = document.getElementById('viewport');
+    const w = vp.clientWidth - 32, h = vp.clientHeight;
+    stage.style.transform = `scale(${Math.min(w / 1280, h / 720)})`;
+  }
+  addEventListener('resize', fit); fit();
+
+  // build per-letter titles and wobble words
+  document.querySelectorAll('[data-letters]').forEach(el => {
+    const accent = +el.dataset.accent;
+    el.innerHTML = [...el.dataset.letters].map((c, i) =>
+      `<span style="--i:${i}${i >= accent ? ';color:var(--pink)' : ''}">${c}</span>`).join('');
+  });
+  document.querySelectorAll('[data-wobble]').forEach(el => {
+    el.innerHTML = [...el.dataset.wobble].map((c, i) => `<span style="--i:${i}">${c}</span>`).join('');
+  });
+  document.querySelectorAll('[data-spoons]').forEach(el => {
+    el.innerHTML = Array.from({ length: +el.dataset.spoons }, (_, i) => `<span style="--i:${i}">🥄</span>`).join('');
+  });
+
+  function type(el, text, speed = 45, done) {
+    el.innerHTML = '<span class="t"></span><span class="caret"></span>';
+    const t = el.querySelector('.t'); let i = 0;
+    const step = () => { t.textContent = text.slice(0, ++i); i < text.length ? later(step, speed) : done && done(); };
+    step();
+  }
+
+  // slide-specific scripted moments
+  function enter(s) {
+    s.querySelectorAll('[data-type]').forEach(el => { el.innerHTML = ''; later(() => type(el, el.dataset.type), +el.dataset.delay || 0); });
+    s.querySelectorAll('[data-claim]').forEach(el => {
+      el.classList.remove('busted'); el.querySelector('.box').textContent = '';
+      later(() => type(el.querySelector('.box'), el.dataset.claim, 38, () => later(() => {
+        el.classList.add('busted'); el.querySelector('.caret')?.remove();
+      }, 350)), +el.dataset.at);
+    });
+    s.querySelectorAll('[data-count]').forEach(el => {
+      const target = +el.dataset.count, t0 = performance.now() + 700;
+      const tick = now => { const p = Math.max(0, Math.min(1, (now - t0) / 1400)); el.textContent = Math.round(target * (1 - Math.pow(1 - p, 3)));
+        if (p < 1 && s.classList.contains('on')) requestAnimationFrame(tick); };
+      el.textContent = '0'; requestAnimationFrame(tick);
+    });
+    if (s.querySelector('#reel')) runReel();
+    const people = [...s.querySelectorAll('.person')];
+    if (people.length) {
+      let k = 0;
+      const cycle = () => { people.forEach((p, j) => p.classList.toggle('hot', j === k)); k = (k + 1) % people.length; later(cycle, 1300); };
+      people.forEach(p => p.classList.remove('hot'));
+      later(cycle, 2000);
+    }
+  }
+
+  const reelCaps = ['Understands label photos directly, no separate OCR step', 'Works in a shop with no network', 'Photos never leave the device', 'Small E2B / E4B models run on a normal laptop'];
+  function runReel() {
+    const track = document.getElementById('reel'), items = [...track.children], cap = document.getElementById('reelCap');
+    let k = 0;
+    const show = () => {
+      track.style.transform = `translateX(${-190 - k * 380}px)`;
+      items.forEach((it, j) => it.classList.toggle('cur', j === k));
+      cap.textContent = reelCaps[k];
+      k = (k + 1) % items.length; later(show, 1800);
+    };
+    later(show, 500);
+  }
+
+  function go(n) {
+    n = Math.max(0, Math.min(slides.length - 1, n));
+    timers.forEach(clearTimeout); timers = [];
+    slides.forEach(s => s.classList.remove('active', 'on'));
+    cur = n; const s = slides[n];
+    s.classList.add('active'); void s.offsetWidth; s.classList.add('on');
+    const [ax, ay, bx, by] = (s.dataset.aura || '30% 110% 80% -10%').split(' ');
+    const au = document.getElementById('aura');
+    au.style.setProperty('--ax', ax); au.style.setProperty('--ay', ay); au.style.setProperty('--bx', bx); au.style.setProperty('--by', by);
+    document.getElementById('count').textContent = `${n + 1} / ${slides.length}`;
+    document.getElementById('progress').style.width = `${(n + 1) / slides.length * 100}%`;
+    enter(s);
+  }
+
+  const next = () => go(cur + 1), prev = () => go(cur - 1);
+  addEventListener('keydown', e => {
+    if (['ArrowRight', 'PageDown', ' ', 'Enter'].includes(e.key)) { e.preventDefault(); next(); }
+    if (['ArrowLeft', 'PageUp', 'Backspace'].includes(e.key)) { e.preventDefault(); prev(); }
+    if (e.key === 'Home') go(0); if (e.key === 'End') go(slides.length - 1);
+    if (e.key === 'r' || e.key === 'R') go(cur);
+  });
+  document.getElementById('viewport').addEventListener('click', e => (e.clientX > innerWidth / 3 ? next() : prev()));
+  document.getElementById('next').onclick = next;
+  document.getElementById('prev').onclick = prev;
+  document.getElementById('fs').onclick = () => {
+    try { document.fullscreenElement ? document.exitFullscreen() : document.documentElement.requestFullscreen().catch(() => {}); } catch (e) {}
+  };
+  let sx = null;
+  addEventListener('touchstart', e => sx = e.touches[0].clientX, { passive: true });
+  addEventListener('touchend', e => { if (sx === null) return; const dx = e.changedTouches[0].clientX - sx; if (Math.abs(dx) > 40) dx < 0 ? next() : prev(); sx = null; });
+  setTimeout(() => document.getElementById('hint').style.opacity = 0, 5000);
+
+  const start = parseInt(location.hash.slice(1), 10);
+  go(Number.isFinite(start) ? start - 1 : 0);
+})();
+</script>
