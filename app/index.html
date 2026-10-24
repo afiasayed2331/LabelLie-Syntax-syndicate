@@ -423,6 +423,7 @@ details p { margin-top: 6px; font-size: 14px; color: var(--muted); }
   var $ = function (id) { return document.getElementById(id); };
   var SERVER = { gemma: null };
   var HOST = window.LabelLieHost || null; // set only in the hosted (online) version
+  var STATIC = location.protocol === 'file:' || /\.github\.io$/.test(location.hostname); // no server: show the sample
   var state = { step: 1, front: null, back: null, lang: 'en', who: 'all', result: null, timers: [] };
 
   // ---------- text in both languages ----------
@@ -619,7 +620,7 @@ details p { margin-top: 6px; font-size: 14px; color: var(--muted); }
     }
 
     // opened straight from disk: no server, show the sample
-    if (location.protocol === 'file:') {
+    if (STATIC) {
       state.timers.push(setTimeout(function () { finish(DEMO, true); }, 3200));
       return;
     }
@@ -716,7 +717,7 @@ details p { margin-top: 6px; font-size: 14px; color: var(--muted); }
     e.preventDefault();
     var back = $('typeBack').value.trim(), front = $('typeFront').value.trim();
     if (back.length < 5) { toast(t('dec_none')); return; }
-    if (!HOST && location.protocol === 'file:') { toast(t('dec_offline')); return; }
+    if (!HOST && STATIC) { toast(t('dec_offline')); return; }
     $('loadImg').removeAttribute('src');
     show('loading'); $('loadMsg').textContent = t('ocr_msgs')[2]; $('loadBar').style.width = '60%';
     if (HOST) { HOST.text(back, front).then(function (d) { finish(d, false); }, function (err) { showError(err.kind || 'host', err); }); return; }
@@ -930,7 +931,7 @@ details p { margin-top: 6px; font-size: 14px; color: var(--muted); }
     var box = $('decResults');
     q = String(q || '').trim();
     if (!/\d{3}/.test(q)) { box.innerHTML = '<p class="sub">' + esc(t('dec_none')) + '</p>'; return; }
-    if (!HOST && location.protocol === 'file:') { box.innerHTML = '<p class="sub">' + esc(t('dec_offline')) + '</p>'; return; }
+    if (!HOST && STATIC) { box.innerHTML = '<p class="sub">' + esc(t('dec_offline')) + '</p>'; return; }
     box.innerHTML = '<p class="sub"><span class="spin"></span> ' + esc(t('dec_wait')) + '</p>';
     (HOST ? HOST.decode(q).then(function (d) { return { ok: true, d: d }; }, function (e) { return { ok: false, d: { error: e.message } }; })
       : fetch('/decode', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ q: q }) })
